@@ -11,8 +11,8 @@ for %%i in (cmd bat exe) do (
 )
 for /f "tokens=2 delims==" %%i in ('assoc .py') do (
     for /f "tokens=2 delims==" %%j in ('ftype %%i') do (
-        for /f "tokens=1" %%k in ("%%j") do (
-            call :SetPythonExe "%%k"
+        for /f tokens^=1^ delims^=^" %%k in ("%%j") do (
+            call :SetPythonExe %%k
         )
     )
 )
