@@ -16,7 +16,7 @@ setup(
     license='Apache License, v2.0',
     packages=find_packages(exclude=('tests', 'docs')),
     test_suite="tests",
-    scripts=['bin/gimme-aws-creds', 'bin/gimme-aws-creds.cmd'],
+    scripts=['bin/gimme-aws-creds', 'bin/gimme-aws-creds.cmd', 'bin/gimme-aws-creds-credential-process'],
     classifiers=[
         'Natural Language :: English',
         'Programming Language :: Python :: 3 :: Only',
