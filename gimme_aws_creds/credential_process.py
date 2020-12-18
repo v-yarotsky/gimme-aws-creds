@@ -32,6 +32,8 @@ class CredentialProcess:
 
     def fetch_new_credentials(self) -> Credentials:
         with self.ui:
+            if self.creds.device_token is None:
+                self.creds.handle_action_register_device()
             for data in self.creds.iter_selected_aws_credentials():  # TODO: ensure one!
                 creds = data["credentials"]
                 result = Credentials(
