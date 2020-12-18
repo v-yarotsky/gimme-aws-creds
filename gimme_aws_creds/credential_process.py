@@ -1,28 +1,32 @@
 from . import main, ui
 from .cache import CredentialsCache
 from .credentials import Credentials
+from .config import Config
 
 import json
 import logging
 import os
 import sys
 
-logging.basicConfig(level=logging.INFO,
+logging.basicConfig(level=logging.DEBUG,
                     filename='/tmp/aws-okta.log',
                     filemode='w')
 
 class CredentialProcess:
     def __init__(self, env=os.environ):
         env = env.copy()
-        self.aws_profile = env['AWS_PROFILE']
-        self.cache = CredentialsCache(f'aws-okta_{self.aws_profile}')
-
         del env['AWS_PROFILE']  # ensure we don't get in a loop resolving AWS creds for the aws sts assume-role call
+
         self.ui = ui.CLIUserInterface(environ=env)
         self.creds = main.GimmeAWSCreds(ui=self.ui)
+        cfg = Config(self.ui, create_config=False)
+        cfg.get_args()
+        self.gac_profile = cfg.conf_profile
+        self.cache = CredentialsCache(f'aws-okta_{self.gac_profile}')
+
 
     def run(self) -> None:
-        logging.info("Fetching cached credentials")
+        logging.info(f"Fetching cached credentials for gac profile {self.gac_profile}")
         credentials = self.cache.fetch()
         if credentials is None or credentials.expired():
             logging.warning("Cached credentials not present or expired. Requesting new credentials.")
